@@ -6,25 +6,19 @@ import (
 )
 
 // main function,
-// scan inputs and run the game loop
+// scan inputs and run the game loop,
+// print played actions
 func main() {
-
-	inputStream := os.Stdin
-
+	stateBuilder := NewStateBuilder(os.Stdin)
+	state := stateBuilder.buildInitState()
+	round := 0
 	for {
-		var opponentRow, opponentCol int
-		fmt.Fscan(inputStream, &opponentRow, &opponentCol)
-
-		var validActionCount int
-		fmt.Fscan(inputStream, &validActionCount)
-
-		for i := 0; i < validActionCount; i++ {
-			var row, col int
-			fmt.Fscan(inputStream, &row, &col)
-		}
+		round++
+		state := stateBuilder.buildTurnState(state)
 
 		// fmt.Fprintln(os.Stderr, "Debug messages...")
-		fmt.Println("0 0") // Write action to stdout
+		cellToPlay := state.availableActions[0]
+		fmt.Println(cellToPlay.row, cellToPlay.column) // Write action to stdout
 	}
 }
 
