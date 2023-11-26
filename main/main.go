@@ -12,10 +12,11 @@ func main() {
 	stateBuilder := NewStateBuilder(os.Stdin)
 	state := stateBuilder.buildInitState()
 	round := 0
+	strategy := NewSimpleStrategy()
 	for {
 		round++
 		state = stateBuilder.buildTurnState(state)
-		cellToPlay := state.availableActions[0]
+		cellToPlay := strategy.findAction(state)
 		state = state.SetPlayer(cellToPlay)
 		// fmt.Fprintln(os.Stderr, "Debug messages...")
 		fmt.Fprintln(os.Stderr, "State:", state)
