@@ -24,7 +24,11 @@ func (builder StateBuilder) buildTurnState(previousState *State) *State {
 		fmt.Fscan(builder.inputStream, &row, &col)
 		availableActions[i] = NewCell(col, row)
 	}
-	return previousState.SetOpponent(NewCell(opponentColumn, opponentRow)).SetAvailableActions(availableActions)
+	newState := previousState.SetAvailableActions(availableActions)
+	if opponentColumn != -1 && opponentRow != -1 {
+		newState = newState.SetOpponent(NewCell(opponentColumn, opponentRow))
+	}
+	return newState
 }
 
 func NewStateBuilder(inputStream *os.File) StateBuilder {
