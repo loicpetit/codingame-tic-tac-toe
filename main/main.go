@@ -14,10 +14,11 @@ func main() {
 	round := 0
 	for {
 		round++
-		state := stateBuilder.buildTurnState(state)
-
-		// fmt.Fprintln(os.Stderr, "Debug messages...")
+		state = stateBuilder.buildTurnState(state)
 		cellToPlay := state.availableActions[0]
+		state = state.SetPlayer(cellToPlay)
+		// fmt.Fprintln(os.Stderr, "Debug messages...")
+		fmt.Fprintln(os.Stderr, "State:", state)
 		fmt.Println(cellToPlay.row, cellToPlay.column) // Write action to stdout
 	}
 }

@@ -10,6 +10,13 @@ type State struct {
 	grid             *Grid
 }
 
+func (state *State) String() string {
+	if state == nil {
+		return ""
+	}
+	return fmt.Sprintf("{width: %d, height: %d, opponent: %v, availableActions: %v, grid: %v}", state.width, state.height, state.opponent, state.availableActions, state.grid)
+}
+
 func (state *State) SetWidth(width int) *State {
 	if state == nil {
 		state = NewState()
