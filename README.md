@@ -19,6 +19,9 @@ Debug, execute "go test -v -run nothing -benchtime 1000x -bench Debug ./main"
 ## Generate documention
 In project root "go doc -cmd -u -all main > dist/main.txt"
 
+## Generate main executbale
+In project root "go build -o ./dist ./main"
+
 ## VS code tasks
 
 ```
@@ -43,7 +46,7 @@ In project root "go doc -cmd -u -all main > dist/main.txt"
     "presentation": {
         "clear": true
     },
-    "command": "go build ./main",
+    "command": "go build -o ./dist ./main",
     "problemMatcher": []
 },
 {

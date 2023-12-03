@@ -9,7 +9,7 @@ import (
 // print played actions
 func main() {
 	game := NewTicTacToeGame()
-	strategy := NewSimpleStrategy(game)
+	strategy := NewStrategyFromArgs(os.Args, game)
 	runner := NewTicTacToeRunner(game, strategy)
 	runner.runFromInputStream(os.Stdin, nil)
 }
