@@ -7,12 +7,12 @@ func TestNewCell(t *testing.T) {
 	if nil == cell {
 		t.Fatal("No cell returned")
 	}
-	expectedColumn := 1
-	if expectedColumn != cell.column {
-		t.Errorf("Expected column %d but was %d", expectedColumn, cell.column)
+	expectedX := 1
+	if expectedX != cell.x {
+		t.Errorf("Expected column %d but was %d", expectedX, cell.x)
 	}
-	expectedRow := 2
-	if expectedRow != cell.row {
-		t.Errorf("Expected row %d but was %d", expectedRow, cell.row)
+	expectedY := 2
+	if expectedY != cell.y {
+		t.Errorf("Expected row %d but was %d", expectedY, cell.y)
 	}
 }

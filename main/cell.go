@@ -5,17 +5,17 @@ import (
 )
 
 type Cell struct {
-	column int
-	row    int
+	x int
+	y int
 }
 
 func (cell *Cell) String() string {
 	if cell == nil {
 		return ""
 	}
-	return fmt.Sprintf("(%d,%d)", cell.column, cell.row)
+	return fmt.Sprintf("(%d,%d)", cell.x, cell.y)
 }
 
-func NewCell(column int, row int) *Cell {
-	return &Cell{column, row}
+func NewCell(x int, y int) *Cell {
+	return &Cell{x, y}
 }

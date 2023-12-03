@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -10,31 +9,20 @@ func TestNewState(t *testing.T) {
 	if nil == state {
 		t.Fatal("No state returned")
 	}
+	if nil == state.grid {
+		t.Fatal("No grid in state")
+	}
 	expectedWidth := 0
-	if expectedWidth != state.width {
-		t.Errorf("Expected width %d but was %d", expectedWidth, state.width)
+	if expectedWidth != state.grid.width {
+		t.Errorf("Expected grid width %d but was %d", expectedWidth, state.grid.width)
 	}
 	expectedHeight := 0
-	if expectedHeight != state.height {
-		t.Errorf("Expected height %d but was %d", expectedHeight, state.height)
+	if expectedHeight != state.grid.height {
+		t.Errorf("Expected grid height %d but was %d", expectedHeight, state.grid.height)
 	}
-	if nil != state.opponent {
-		t.Errorf("Expected opponent nil but was %v", state.opponent)
-	}
-	expectedNbAvailableActions := 0
-	nbAvailableActions := len(state.availableActions)
-	if expectedNbAvailableActions != nbAvailableActions {
-		t.Errorf("Expected nb available actions %d but was %d", expectedNbAvailableActions, nbAvailableActions)
-	}
-	if state.grid == nil {
-		t.Error("Expected an initialized grid")
-	} else {
-		if state.grid.width != expectedWidth {
-			t.Errorf("Expected grid width %d but was %d", expectedWidth, state.grid.width)
-		}
-		if state.grid.height != expectedHeight {
-			t.Errorf("Expected grid height %d but was %d", expectedHeight, state.grid.height)
-		}
+	expectedPlayer := 0
+	if expectedPlayer != state.lastPlayer {
+		t.Errorf("Expected last player %d but was %d", expectedPlayer, state.lastPlayer)
 	}
 }
 
@@ -47,26 +35,25 @@ func TestSetStateWidth(t *testing.T) {
 	if state == newState {
 		t.Fatal("Should return a new state")
 	}
-	expectedWidth := 0
-	if expectedWidth != state.width {
-		t.Errorf("Expected width %d but was %d", expectedWidth, state.width)
+	if nil == newState.grid {
+		t.Fatal("No grid in new state")
 	}
-	expectedNewWidth := 2
-	if expectedNewWidth != newState.width {
-		t.Errorf("Expected width %d but was %d", expectedNewWidth, newState.width)
-	}
-	if state.height != newState.height {
-		t.Errorf("Height changed")
-	}
-	if state.opponent != newState.opponent {
-		t.Errorf("Opponent changed")
-	}
-	assertCellsAreEqual(t, state.availableActions, newState.availableActions)
 	if state.grid == newState.grid {
 		t.Error("Expected a new grid")
 	}
-	if newState.grid.width != expectedNewWidth {
-		t.Errorf("Expected new grid width to be %d but was %d", expectedNewWidth, newState.grid.width)
+	expectedWidth := 0
+	if expectedWidth != state.grid.width {
+		t.Errorf("Expected old grid width %d but was %d", expectedWidth, state.grid.width)
+	}
+	expectedNewWidth := 2
+	if expectedNewWidth != newState.grid.width {
+		t.Errorf("Expected new grid width %d but was %d", expectedNewWidth, newState.grid.width)
+	}
+	if state.grid.height != newState.grid.height {
+		t.Errorf("Grid height changed")
+	}
+	if state.lastPlayer != newState.lastPlayer {
+		t.Errorf("Last player changed")
 	}
 }
 
@@ -79,176 +66,85 @@ func TestSetStateHeight(t *testing.T) {
 	if state == newState {
 		t.Fatal("Should return a new state")
 	}
-	expectedHeight := 0
-	if expectedHeight != state.height {
-		t.Errorf("Expected height %d but was %d", expectedHeight, state.height)
+	if nil == newState.grid {
+		t.Fatal("No grid in new state")
 	}
-	expectedNewHeight := 2
-	if expectedNewHeight != newState.height {
-		t.Errorf("Expected height %d but was %d", expectedNewHeight, newState.height)
-	}
-	if state.width != newState.width {
-		t.Errorf("Width changed")
-	}
-	if state.opponent != newState.opponent {
-		t.Errorf("Opponent changed")
-	}
-	assertCellsAreEqual(t, state.availableActions, newState.availableActions)
 	if state.grid == newState.grid {
 		t.Error("Expected a new grid")
 	}
-	if newState.grid.height != expectedNewHeight {
-		t.Errorf("Expected new grid height to be %d but was %d", expectedNewHeight, newState.grid.height)
+	expectedHeight := 0
+	if expectedHeight != state.grid.height {
+		t.Errorf("Expected old grid height %d but was %d", expectedHeight, state.grid.height)
+	}
+	expectedNewHeight := 2
+	if expectedNewHeight != newState.grid.height {
+		t.Errorf("Expected new grid height %d but was %d", expectedNewHeight, newState.grid.height)
+	}
+	if state.grid.width != newState.grid.width {
+		t.Errorf("Grid width changed")
+	}
+	if state.lastPlayer != newState.lastPlayer {
+		t.Errorf("Last player changed")
 	}
 }
 
-func TestSetStateOpponent(t *testing.T) {
+// todo set cell
+func TestSetCell(t *testing.T) {
 	state := NewState().SetWidth(3).SetHeight(3)
-	newState := state.SetOpponent(&Cell{2, 1})
+	newState := state.SetCell(2, 1, 1)
 	if nil == newState {
 		t.Fatal("No state returned")
 	}
 	if state == newState {
 		t.Fatal("Should return a new state")
 	}
-	if state.width != newState.width {
-		t.Errorf("Width changed")
+	if nil == newState.grid {
+		t.Fatal("No grid in new state")
 	}
-	if state.height != newState.width {
-		t.Errorf("Width changed")
+	if state.grid == newState.grid {
+		t.Error("Expected a new grid")
 	}
-	if state.opponent == newState.opponent {
-		t.Errorf("Opponent should change")
+	expectedHeight := 3
+	if expectedHeight != newState.grid.height {
+		t.Errorf("Expected grid height %d but was %d", expectedHeight, state.grid.height)
 	}
-	if newState.grid.cells[2][1] != 2 {
-		t.Error("Grid (2,1) should be 2")
+	expectedWidth := 3
+	if expectedWidth != newState.grid.width {
+		t.Errorf("Expected grid width %d but was %d", expectedWidth, newState.grid.width)
 	}
-	assertCellsAreEqual(t, state.availableActions, newState.availableActions)
-}
-
-func TestSetStateOutOfRangeOpponent(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic expected")
+	for x := 0; x < expectedWidth; x++ {
+		for y := 0; y < expectedHeight; y++ {
+			if x == 2 && y == 1 {
+				if newState.grid.cells[x][y] != 1 {
+					t.Errorf("Expected cell (2,1) to have value 1 but was %d", newState.grid.cells[x][y])
+				}
+			} else if newState.grid.cells[x][y] != 0 {
+				t.Errorf("Expected cell (2,1) to have value 0 but was %d", newState.grid.cells[x][y])
+			}
 		}
-	}()
-	NewState().SetOpponent(&Cell{1, 1})
-}
-
-func TestSetStatePlayedCellOpponent(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic expected")
-		}
-	}()
-	NewState().
-		SetWidth(3).
-		SetHeight(3).
-		SetOpponent(&Cell{1, 1}).
-		SetOpponent(&Cell{1, 1})
-}
-
-func TestSetStatePlayer(t *testing.T) {
-	state := NewState().SetWidth(3).SetHeight(3)
-	newState := state.SetPlayer(&Cell{2, 1})
-	if nil == newState {
-		t.Fatal("No state returned")
 	}
-	if state == newState {
-		t.Fatal("Should return a new state")
+	expectedOldLastPlayer := 0
+	if expectedOldLastPlayer != state.lastPlayer {
+		t.Errorf("Expected old last player %d but was %d", expectedOldLastPlayer, state.lastPlayer)
 	}
-	if state.width != newState.width {
-		t.Errorf("Width changed")
+	expectedNewLastPlayer := 1
+	if expectedNewLastPlayer != newState.lastPlayer {
+		t.Errorf("Expected new last player %d but was %d", expectedNewLastPlayer, newState.lastPlayer)
 	}
-	if state.height != newState.width {
-		t.Errorf("Width changed")
-	}
-	if state.opponent != newState.opponent {
-		t.Errorf("Opponent changed")
-	}
-	if newState.grid.cells[2][1] != 1 {
-		t.Error("Grid (2,1) should be 1")
-	}
-	assertCellsAreEqual(t, state.availableActions, newState.availableActions)
-}
-
-func TestSetStateOutOfRangePlayer(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic expected")
-		}
-	}()
-	NewState().SetPlayer(&Cell{1, 1})
-}
-
-func TestSetStatePlayedCellPlayer(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic expected")
-		}
-	}()
-	NewState().
-		SetWidth(3).
-		SetHeight(3).
-		SetOpponent(&Cell{1, 1}).
-		SetPlayer(&Cell{1, 1})
-}
-
-func TestSetStateAvailableActions(t *testing.T) {
-	state := NewState()
-	newState := state.SetAvailableActions([]*Cell{{1, 1}, {1, 2}})
-	if nil == newState {
-		t.Fatal("No state returned")
-	}
-	if state == newState {
-		t.Fatal("Should return a new state")
-	}
-	if state.width != newState.width {
-		t.Errorf("Width changed")
-	}
-	if state.height != newState.width {
-		t.Errorf("Width changed")
-	}
-	if state.opponent != newState.opponent {
-		t.Errorf("Opponent changed")
-	}
-	assertCellsAreNotEqual(t, state.availableActions, newState.availableActions)
 }
 
 func TestStateSetters(t *testing.T) {
 	state := NewState().
 		SetWidth(3).
 		SetHeight(2).
-		SetPlayer(&Cell{0, 0}).
-		SetOpponent(&Cell{1, 0}).
-		SetPlayer(&Cell{1, 1}).
-		SetAvailableActions([]*Cell{{2, 0}, {0, 1}})
-	if state.width != 3 {
+		SetCell(0, 0, 1).
+		SetCell(1, 0, 2).
+		SetCell(1, 1, 1)
+	if state.grid.width != 3 {
 		t.Error("Bad width")
 	}
-	if state.height != 2 {
+	if state.grid.height != 2 {
 		t.Error("Bad height")
-	}
-	if state.opponent.column != 1 {
-		t.Error("Bad opponent column")
-	}
-	if state.opponent.row != 0 {
-		t.Error("Bad opponent row")
-	}
-	if len(state.availableActions) != 2 {
-		t.Error("Bad nb available actions")
-	}
-	if state.availableActions[0].column != 2 {
-		t.Error("Bad available actions 0 column")
-	}
-	if state.availableActions[0].row != 0 {
-		t.Error("Bad available actions 0 row")
-	}
-	if state.availableActions[1].column != 0 {
-		t.Error("Bad available actions 1 column")
-	}
-	if state.availableActions[1].row != 1 {
-		t.Error("Bad available actions 1 row")
 	}
 	for x, column := range state.grid.cells {
 		for y, value := range column {
@@ -269,34 +165,4 @@ func TestStateSetters(t *testing.T) {
 			}
 		}
 	}
-}
-
-func assertCellsAreEqual(t *testing.T, array1 []*Cell, array2 []*Cell) {
-	equal, msg := areCellsEqual(t, array1, array2)
-	if !equal {
-		t.Error(msg)
-	}
-}
-
-func assertCellsAreNotEqual(t *testing.T, array1 []*Cell, array2 []*Cell) {
-	equal, _ := areCellsEqual(t, array1, array2)
-	if equal {
-		t.Error("Arrays are equal")
-	}
-}
-
-func areCellsEqual(t *testing.T, array1 []*Cell, array2 []*Cell) (bool, string) {
-	nbCell1 := len(array1)
-	nbCell2 := len(array2)
-	if nbCell1 != nbCell2 {
-		return false, fmt.Sprintf("First array has length %d bu second has length %d", nbCell1, nbCell2)
-	}
-	for i := 0; i < nbCell1; i++ {
-		cell1 := array1[i]
-		cell2 := array2[i]
-		if cell1 != cell2 {
-			return false, fmt.Sprintf("Cell %d is different", i)
-		}
-	}
-	return true, ""
 }

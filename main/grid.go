@@ -22,7 +22,7 @@ func (grid *Grid) String() string {
 			if x != 0 || y != 0 {
 				s.WriteRune(';')
 			}
-			s.WriteString(fmt.Sprintf("(%d,%d)=%d", x, y, grid.cells[x][y]))
+			s.WriteString(fmt.Sprintf("(%d,%d):%d", x, y, grid.cells[x][y]))
 		}
 	}
 	s.WriteRune('}')
