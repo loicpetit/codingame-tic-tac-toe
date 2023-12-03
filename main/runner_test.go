@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestMainNoTurn(t *testing.T) {
+func TestRunnerNoTurn(t *testing.T) {
 	// prepare
 	quit := make(chan bool)
 	read, write, _ := os.Pipe()
@@ -16,7 +16,7 @@ func TestMainNoTurn(t *testing.T) {
 	go func() {
 		quit <- true
 	}()
-	finalState = mainFrom(read, quit)
+	finalState = runFromInputStream(read, quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
@@ -59,7 +59,7 @@ func TestMainNoTurn(t *testing.T) {
 	}
 }
 
-func TestMain(t *testing.T) {
+func TestRunner(t *testing.T) {
 	// prepare
 	quit := make(chan bool)
 	read, write, _ := os.Pipe()
@@ -93,7 +93,7 @@ func TestMain(t *testing.T) {
 		// stop
 		quit <- true
 	}()
-	finalState := mainFrom(read, quit)
+	finalState := runFromInputStream(read, quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
