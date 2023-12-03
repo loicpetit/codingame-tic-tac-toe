@@ -8,24 +8,34 @@ import (
 // scan inputs and run the game loop,
 // print played actions
 func main() {
-	mainFrom(os.Stdin)
+	mainFrom(os.Stdin, nil)
 }
 
-func mainFrom(inputStream *os.File) {
+func mainFrom(inputStream *os.File, quit chan bool) *State {
 	game := NewTicTacToeGame()
 	state := game.Start()
+	inputs := make(chan *InputData)
 	round := 0
+	var read = func() {
+		inputs <- ReadInputData(inputStream)
+	}
+	go read()
 	for {
-		round++
-		inputData := ReadInputData(inputStream)
-		if inputData.opponentAction != nil {
-			state = game.Play(state, inputData.opponentAction)
+		select {
+		case input := <-inputs:
+			round++
+			if input.opponentAction != nil {
+				state = game.Play(state, input.opponentAction)
+			}
+			strategy := NewSimpleStrategy(input.availableCells)
+			playerAction := strategy.findAction(state, 1)
+			ValidateOutput(playerAction, input)
+			state = game.Play(state, playerAction)
+			WriteDebug("State:", state)
+			WriteOutput(playerAction)
+			go read()
+		case <-quit:
+			return state
 		}
-		strategy := NewSimpleStrategy(inputData.availableCells)
-		playerAction := strategy.findAction(state, 1)
-		ValidateOutput(playerAction, inputData)
-		state = game.Play(state, playerAction)
-		WriteDebug("State:", state)
-		WriteOutput(playerAction)
 	}
 }
