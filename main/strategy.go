@@ -1,5 +1,5 @@
 package main
 
-type Strategy interface {
-	findAction(state *State, player int) *Action
+type Strategy[STATE any, ACTION any] interface {
+	findAction(state *STATE, player int) *ACTION
 }

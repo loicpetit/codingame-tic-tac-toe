@@ -8,5 +8,8 @@ import (
 // scan inputs and run the game loop,
 // print played actions
 func main() {
-	runFromInputStream(os.Stdin, nil)
+	game := NewTicTacToeGame()
+	strategy := NewSimpleStrategy(game)
+	runner := NewTicTacToeRunner(game, strategy)
+	runner.runFromInputStream(os.Stdin, nil)
 }

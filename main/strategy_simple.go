@@ -1,18 +1,22 @@
 package main
 
 type SimpleStrategy struct {
-	availableCells []*Cell
+	game Game[State, Action]
 }
 
 func (strategy SimpleStrategy) findAction(state *State, player int) *Action {
 	if state == nil {
 		panic("State cannot be nil")
 	}
-	return NewAction(player, strategy.availableCells[0].x, strategy.availableCells[0].y)
+	availableActions := strategy.game.GetAvailableActions(state, player)
+	if len(availableActions) == 0 {
+		return nil
+	}
+	return availableActions[0]
 }
 
-func NewSimpleStrategy(availableCells []*Cell) Strategy {
+func NewSimpleStrategy(game Game[State, Action]) Strategy[State, Action] {
 	return SimpleStrategy{
-		availableCells: availableCells,
+		game: game,
 	}
 }

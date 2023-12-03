@@ -8,6 +8,8 @@ import (
 
 func TestRunnerNoTurn(t *testing.T) {
 	// prepare
+	game := NewTicTacToeGame()
+	runner := NewTicTacToeRunner(game, NewSimpleStrategy(game))
 	quit := make(chan bool)
 	read, write, _ := os.Pipe()
 	defer read.Close()
@@ -16,7 +18,7 @@ func TestRunnerNoTurn(t *testing.T) {
 	go func() {
 		quit <- true
 	}()
-	finalState = runFromInputStream(read, quit)
+	finalState = runner.runFromInputStream(read, quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
@@ -61,6 +63,8 @@ func TestRunnerNoTurn(t *testing.T) {
 
 func TestRunner(t *testing.T) {
 	// prepare
+	game := NewTicTacToeGame()
+	runner := NewTicTacToeRunner(game, NewSimpleStrategy(game))
 	quit := make(chan bool)
 	read, write, _ := os.Pipe()
 	defer read.Close()
@@ -93,7 +97,7 @@ func TestRunner(t *testing.T) {
 		// stop
 		quit <- true
 	}()
-	finalState := runFromInputStream(read, quit)
+	finalState := runner.runFromInputStream(read, quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
@@ -110,13 +114,13 @@ func TestRunner(t *testing.T) {
 	if finalState.grid.cells[0][0] != 1 {
 		t.Errorf("Grid (%d, %d) should be %d but was %d", 0, 0, 1, finalState.grid.cells[0][0])
 	}
-	if finalState.grid.cells[0][1] != 0 {
-		t.Errorf("Grid (%d, %d) should be %d but was %d", 0, 1, 0, finalState.grid.cells[0][1])
+	if finalState.grid.cells[0][1] != 1 {
+		t.Errorf("Grid (%d, %d) should be %d but was %d", 0, 1, 1, finalState.grid.cells[0][1])
 	}
 	if finalState.grid.cells[0][2] != 0 {
 		t.Errorf("Grid (%d, %d) should be %d but was %d", 0, 2, 0, finalState.grid.cells[0][2])
 	}
-	if finalState.grid.cells[1][0] != 1 {
+	if finalState.grid.cells[1][0] != 0 {
 		t.Errorf("Grid (%d, %d) should be %d but was %d", 1, 0, 0, finalState.grid.cells[1][0])
 	}
 	if finalState.grid.cells[1][1] != 2 {
@@ -132,6 +136,6 @@ func TestRunner(t *testing.T) {
 		t.Errorf("Grid (%d, %d) should be %d but was %d", 2, 1, 0, finalState.grid.cells[2][1])
 	}
 	if finalState.grid.cells[2][2] != 0 {
-		t.Errorf("Grid (%d, %d) should be %d but was %d", 2, 2, 1, finalState.grid.cells[2][2])
+		t.Errorf("Grid (%d, %d) should be %d but was %d", 2, 2, 0, finalState.grid.cells[2][2])
 	}
 }

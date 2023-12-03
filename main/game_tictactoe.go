@@ -128,6 +128,6 @@ func (game TicTacToeGame) Winner(state *State) int {
 	return winner
 }
 
-func NewTicTacToeGame() Game[*State, *Action] {
+func NewTicTacToeGame() Game[State, Action] {
 	return TicTacToeGame{}
 }
