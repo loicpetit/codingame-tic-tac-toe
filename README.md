@@ -20,7 +20,17 @@ Debug, execute "go test -v -run nothing -benchtime 1000x -bench Debug ./main"
 In project root "go doc -cmd -u -all main > dist/main.txt"
 
 ## Generate main executbale
-In project root "go build -o ./dist ./main"
+In project root "go build -o ./dist/main.exe ./main"
+
+## Generate match executbale
+In project root "go build -o ./dist/match.exe ./match"
+
+## Run match (from root)
+```Powershell
+go build -o ./dist/main.exe ./main
+go build -o ./dist/match.exe ./match
+.\dist\match.exe
+```
 
 ## VS code tasks
 
