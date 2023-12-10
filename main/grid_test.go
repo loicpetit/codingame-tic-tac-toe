@@ -135,3 +135,59 @@ func TestGridSetInvalidCell(t *testing.T) {
 		})
 	}
 }
+
+func TestGridHash(t *testing.T) {
+	dataSet := []struct {
+		actions []struct {
+			x, y, value int
+		}
+		expectedHash string
+	}{
+		{
+			expectedHash: "000000000",
+		},
+		{
+			actions: []struct {
+				x     int
+				y     int
+				value int
+			}{
+				{0, 0, 1},
+				{1, 1, 2},
+				{2, 2, 1},
+			},
+			expectedHash: "100020001",
+		},
+		{
+			actions: []struct {
+				x     int
+				y     int
+				value int
+			}{
+				{0, 0, 1},
+				{1, 0, 2},
+				{2, 0, 1},
+				{0, 1, 2},
+				{1, 1, 1},
+				{2, 1, 2},
+				{0, 2, 1},
+				{1, 2, 2},
+				{2, 2, 1},
+			},
+			expectedHash: "121212121",
+		},
+	}
+	for i, data := range dataSet {
+		testName := fmt.Sprintf("Set%d", i+1)
+		t.Run(testName, func(t *testing.T) {
+			grid := NewGrid(3, 3)
+			for _, action := range data.actions {
+				grid = grid.SetCell(action.x, action.y, action.value)
+			}
+			hash := grid.Hash()
+			if hash != data.expectedHash {
+				t.Errorf("Expected hash %s but was %s", data.expectedHash, hash)
+			}
+		})
+	}
+}

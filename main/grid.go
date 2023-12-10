@@ -11,6 +11,16 @@ type Grid struct {
 	width  int
 }
 
+func (grid Grid) Hash() string {
+	var s strings.Builder
+	for x := 0; x < grid.width; x++ {
+		for y := 0; y < grid.height; y++ {
+			s.WriteString(fmt.Sprintf("%d", grid.cells[x][y]))
+		}
+	}
+	return s.String()
+}
+
 func (grid *Grid) String() string {
 	if grid == nil {
 		return ""

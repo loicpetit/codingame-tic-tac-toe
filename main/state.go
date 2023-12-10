@@ -7,6 +7,13 @@ type State struct {
 	grid       *Grid
 }
 
+func (state State) Hash() string {
+	if state.grid == nil {
+		return ""
+	}
+	return fmt.Sprintf("%d-%s", state.lastPlayer, state.grid.Hash())
+}
+
 func (state *State) String() string {
 	if state == nil {
 		return ""

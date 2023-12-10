@@ -7,26 +7,32 @@ import (
 )
 
 type MCTS struct {
-	availableActions []*Action
-	game             Game[State, Action]
+	exploreParam int
+	game         Game[State, Action]
+	tree         map[string]*Action
 }
 
 func (mcts *MCTS) search(state *State, maxTime time.Time) {
-	mcts.availableActions = mcts.game.GetAvailableActions(state, 1)
+	if mcts == nil {
+		return
+	}
+	mcts.tree[state.Hash()] = mcts.game.GetAvailableActions(state, 1)[0]
 	for maxTime.After(time.Now()) {
 		time.Sleep(5 * time.Millisecond)
 	}
 }
 
 func (mcts *MCTS) getBestPlay(state *State) *Action {
-	if len(mcts.availableActions) == 0 {
+	if mcts == nil || state == nil {
 		return nil
 	}
-	return mcts.availableActions[0]
+	return mcts.tree[state.Hash()]
 }
 
 func NewMCTS(game Game[State, Action]) *MCTS {
 	return &MCTS{
-		game: game,
+		exploreParam: 2,
+		game:         game,
+		tree:         map[string]*Action{},
 	}
 }

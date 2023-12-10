@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -164,5 +165,61 @@ func TestStateSetters(t *testing.T) {
 				t.Errorf("Bad value at (%d,%d)", x, y)
 			}
 		}
+	}
+}
+
+func TestStateHash(t *testing.T) {
+	dataSet := []struct {
+		actions []struct {
+			x, y, value int
+		}
+		expectedHash string
+	}{
+		{
+			expectedHash: "0-000000000",
+		},
+		{
+			actions: []struct {
+				x     int
+				y     int
+				value int
+			}{
+				{0, 0, 1},
+				{1, 1, 2},
+				{2, 2, 1},
+			},
+			expectedHash: "1-100020001",
+		},
+		{
+			actions: []struct {
+				x     int
+				y     int
+				value int
+			}{
+				{0, 0, 2},
+				{1, 0, 1},
+				{2, 0, 2},
+				{0, 1, 1},
+				{1, 1, 2},
+				{2, 1, 1},
+				{0, 2, 2},
+				{1, 2, 1},
+				{2, 2, 2},
+			},
+			expectedHash: "2-212121212",
+		},
+	}
+	for i, data := range dataSet {
+		testName := fmt.Sprintf("Set%d", i+1)
+		t.Run(testName, func(t *testing.T) {
+			state := NewState().SetWidth(3).SetHeight(3)
+			for _, action := range data.actions {
+				state = state.SetCell(action.x, action.y, action.value)
+			}
+			hash := state.Hash()
+			if hash != data.expectedHash {
+				t.Errorf("Expected hash %s but was %s", data.expectedHash, hash)
+			}
+		})
 	}
 }
