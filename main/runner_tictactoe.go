@@ -49,7 +49,7 @@ func (runner TicTacToeRunner) run(inputs chan *InputData, quit chan bool) *State
 func startTimer(timer *Timer, round int) time.Time {
 	if round == 1 {
 		timer.startInit()
-		return timer.initStart.Add(995 * time.Millisecond)
+		return timer.initStart.Add(990 * time.Millisecond)
 	} else {
 		timer.startRound()
 		return timer.roundStart.Add(95 * time.Millisecond)

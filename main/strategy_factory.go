@@ -11,9 +11,11 @@ func NewStrategyFromArgs(args []string, game Game[State, Action]) Strategy[State
 	switch strategyName {
 	case "error":
 		panic("Error arg test!")
+	case "mcts":
+		return NewMctsStrategy(game)
 	case "simple":
 		return NewSimpleStrategy(game)
 	default:
-		return NewSimpleStrategy(game)
+		return NewMctsStrategy(game)
 	}
 }

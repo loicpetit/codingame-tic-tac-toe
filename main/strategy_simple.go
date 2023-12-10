@@ -23,6 +23,7 @@ func (strategy SimpleStrategy) findAction(state *State, player int, maxTime time
 }
 
 func NewSimpleStrategy(game Game[State, Action]) Strategy[State, Action] {
+	WriteDebug("Simple strategy")
 	return SimpleStrategy{
 		game: game,
 	}
