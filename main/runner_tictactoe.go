@@ -20,11 +20,13 @@ func (runner TicTacToeRunner) runFromInputStream(inputStream *os.File, quit chan
 }
 
 func (runner TicTacToeRunner) run(inputs chan *InputData, quit chan bool) *State {
+	timer := NewTimer()
 	state := runner.game.Start()
 	round := 0
 	for {
 		select {
 		case input := <-inputs:
+			timer.startRound()
 			round++
 			if input.opponentAction != nil {
 				state = runner.game.Play(state, input.opponentAction)
@@ -34,6 +36,8 @@ func (runner TicTacToeRunner) run(inputs chan *InputData, quit chan bool) *State
 			state = runner.game.Play(state, playerAction)
 			WriteDebug("State:", state)
 			WriteOutput(playerAction)
+			timer.endRound()
+			WriteDebug("Timer:", timer)
 		case <-quit:
 			return state
 		}
