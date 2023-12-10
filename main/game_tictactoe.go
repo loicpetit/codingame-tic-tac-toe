@@ -32,6 +32,13 @@ func (game TicTacToeGame) GetAvailableActions(state *State, player int) []*Actio
 	return actions
 }
 
+func (game TicTacToeGame) GetNextPlayer(action *Action) int {
+	if action == nil || action.player != 1 {
+		return 1
+	}
+	return 2
+}
+
 func (game TicTacToeGame) Play(state *State, action *Action) *State {
 	if state == nil {
 		panic("State should not be nil to play")

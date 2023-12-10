@@ -12,8 +12,8 @@ func (strategy MctsStrategy) findAction(state *State, player int, maxTime time.T
 	if state == nil {
 		panic("State cannot be nil")
 	}
-	strategy.mcts.search(state, maxTime)
-	return strategy.mcts.getBestPlay(state)
+	strategy.mcts.Search(state, maxTime)
+	return strategy.mcts.GetBestAction(state)
 }
 
 func NewMctsStrategy(game Game[State, Action]) Strategy[State, Action] {

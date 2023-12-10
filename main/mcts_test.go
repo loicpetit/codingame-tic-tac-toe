@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-func TestMctsGetBestPlayWithState(t *testing.T) {
+func TestMctsGetBestActionWithState(t *testing.T) {
 	state := NewState().SetWidth(3).SetHeight(3)
 	mcts := NewMCTS(NewTicTacToeGame())
-	mcts.search(state, time.Now())
-	action := mcts.getBestPlay(state)
+	mcts.Search(state, time.Now())
+	action := mcts.GetBestAction(state)
 	if action == nil {
 		t.Fatal("Action should not be nil")
 	}
@@ -26,7 +26,7 @@ func TestMctsGetBestPlayWithState(t *testing.T) {
 
 func TestMctsGetBestPlayWithoutState(t *testing.T) {
 	mcts := NewMCTS(nil)
-	action := mcts.getBestPlay(nil)
+	action := mcts.GetBestAction(nil)
 	if action != nil {
 		t.Fatal("Action should be nil")
 	}

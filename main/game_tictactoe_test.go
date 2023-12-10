@@ -100,6 +100,27 @@ func TestGameGetAvailableActionsBadPlayer(t *testing.T) {
 	game.GetAvailableActions(game.Start(), 0)
 }
 
+func TestGameGetNextPayer(t *testing.T) {
+	dataSet := []struct {
+		testName       string
+		action         *Action
+		expectedPlayer int
+	}{
+		{"Nil action", nil, 1},
+		{"Action player 1", NewAction(1, 1, 1), 2},
+		{"Action player 2", NewAction(2, 2, 2), 1},
+	}
+	game := NewTicTacToeGame()
+	for _, data := range dataSet {
+		t.Run(data.testName, func(t *testing.T) {
+			player := game.GetNextPlayer(data.action)
+			if player != data.expectedPlayer {
+				t.Error("Bad player result")
+			}
+		})
+	}
+}
+
 func TestGamePlay(t *testing.T) {
 	game := NewTicTacToeGame()
 	state := game.Start()
