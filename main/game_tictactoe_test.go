@@ -101,19 +101,20 @@ func TestGameGetAvailableActionsBadPlayer(t *testing.T) {
 }
 
 func TestGameGetNextPayer(t *testing.T) {
+	baseState := NewState().SetHeight(3).SetWidth(3)
 	dataSet := []struct {
 		testName       string
-		action         *Action
+		state          *State
 		expectedPlayer int
 	}{
 		{"Nil action", nil, 1},
-		{"Action player 1", NewAction(1, 1, 1), 2},
-		{"Action player 2", NewAction(2, 2, 2), 1},
+		{"Last player 1", baseState.SetCell(1, 1, 1), 2},
+		{"Last player 2", baseState.SetCell(2, 2, 2), 1},
 	}
 	game := NewTicTacToeGame()
 	for _, data := range dataSet {
 		t.Run(data.testName, func(t *testing.T) {
-			player := game.GetNextPlayer(data.action)
+			player := game.GetNextPlayer(data.state)
 			if player != data.expectedPlayer {
 				t.Error("Bad player result")
 			}

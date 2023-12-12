@@ -8,7 +8,10 @@ import (
 func TestMctsGetBestActionWithState(t *testing.T) {
 	state := NewState().SetWidth(3).SetHeight(3)
 	mcts := NewMCTS(NewTicTacToeGame())
-	mcts.Search(state, time.Now())
+	mcts.Search(state, time.Now().Add(70*time.Millisecond))
+	for _, child := range mcts.tree["0-000000000"].children {
+		t.Log("MCTS", child)
+	}
 	action := mcts.GetBestAction(state)
 	if action == nil {
 		t.Fatal("Action should not be nil")
@@ -16,11 +19,11 @@ func TestMctsGetBestActionWithState(t *testing.T) {
 	if action.player != 1 {
 		t.Errorf("Expected player 1 but was %d", action.player)
 	}
-	if action.x != 0 {
-		t.Errorf("Expected x 0 but was %d", action.x)
+	if action.x != 1 {
+		t.Errorf("Expected x 1 but was %d", action.x)
 	}
-	if action.y != 0 {
-		t.Errorf("Expected y 0 but was %d", action.y)
+	if action.y != 1 {
+		t.Errorf("Expected y 1 but was %d", action.y)
 	}
 }
 

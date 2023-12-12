@@ -1,14 +1,35 @@
 package main
 
+import (
+	"fmt"
+)
+
 type MCTSNode struct {
 	action  *Action //action to get to that state
 	state   *State
 	nbPlays int
 	nbWins  int
+	nbDraws int
 	parent  *MCTSNode
 	// possible actions from that state
 	// if node is nil it is still not expanded
 	children map[*Action]*MCTSNode
+}
+
+func (node *MCTSNode) String() string {
+	if node == nil {
+		return ""
+	}
+	return fmt.Sprintf(
+		"{action: %v, state: %v, nbPlays: %d, nbWins: %d, nbDraws: %d, parentState: %v, possibleActions: %v}",
+		node.action,
+		node.state,
+		node.nbPlays,
+		node.nbWins,
+		node.nbDraws,
+		node.GetParentState(),
+		node.GetPossibleActions(),
+	)
 }
 
 func (node *MCTSNode) AddChild(child *MCTSNode) {
@@ -32,9 +53,16 @@ func (node *MCTSNode) GetChild(action *Action) *MCTSNode {
 	return nil
 }
 
+func (node *MCTSNode) GetParentState() *State {
+	if node == nil || node.parent == nil {
+		return nil
+	}
+	return node.parent.state
+}
+
 func (node *MCTSNode) GetPossibleActions() []*Action {
 	actions := make([]*Action, 0)
-	for action, _ := range node.children {
+	for action := range node.children {
 		actions = append(actions, action)
 	}
 	return actions
@@ -69,6 +97,7 @@ func NewMCTSNode(
 		state:    state,
 		nbPlays:  0,
 		nbWins:   0,
+		nbDraws:  0,
 		parent:   parent,
 		children: children,
 	}
