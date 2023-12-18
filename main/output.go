@@ -2,34 +2,17 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
-func ValidateOutput(action *Action, inputData *InputData) {
+type Writer struct{}
+
+func (Writer) Write(action *Action) {
 	if action == nil {
-		panic("Cannot validate output without action")
+		panic("No action to write")
 	}
-	if inputData == nil {
-		panic("Cannot validate output without input data")
-	}
-	if inputData.availableCells == nil {
-		panic("Cannot validate output without input data available cells")
-	}
-	for _, cell := range inputData.availableCells {
-		if cell == nil {
-			continue
-		}
-		if action.x == cell.x && action.y == cell.y {
-			return
-		}
-	}
-	panic("Action cell is not in input data available cells")
+	WriteOutput(fmt.Sprintf("%d %d", action.y, action.x))
 }
 
-func WriteOutput(action *Action) {
-	fmt.Println(action.y, action.x)
-}
-
-func WriteDebug(a ...any) {
-	fmt.Fprintln(os.Stderr, a...)
+func NewWriter() OutputWriter[Action] {
+	return Writer{}
 }

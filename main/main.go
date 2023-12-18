@@ -1,15 +1,10 @@
 package main
 
-import (
-	"os"
-)
+import "os"
 
-// main function,
-// scan inputs and run the game loop,
-// print played actions
 func main() {
 	game := NewTicTacToeGame()
 	strategy := NewStrategyFromArgs(os.Args, game)
-	runner := NewTicTacToeRunner(game, strategy)
-	runner.runFromInputStream(os.Stdin, nil)
+	runner := NewTicTacToeRunner(os.Stdin, game, strategy)
+	runner.Run(nil)
 }

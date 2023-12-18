@@ -8,7 +8,7 @@ type MctsStrategy struct {
 	mcts *MCTS
 }
 
-func (strategy MctsStrategy) findAction(state *State, player int, maxTime time.Time) *Action {
+func (strategy MctsStrategy) FindAction(state *State, player int, maxTime time.Time) *Action {
 	if state == nil {
 		panic("State cannot be nil")
 	}

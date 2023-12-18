@@ -4,29 +4,39 @@ Ultimate tic tac toe bot https://www.codingame.com/ide/puzzle/tic-tac-toe
 ## Build unique file
 Install the bundle tool (once)
 
-go install golang.org/x/tools/cmd/bundle@latest
+`go install golang.org/x/tools/cmd/bundle@latest`
 
 Bundle the main package
 
+```PowerShell
 & ($env:USERPROFILE + "/go/bin/bundle") -o dist/main.go -dst ./main -prefix '""'  github.com/loicpetit/codingame-tic-tac-toe/main
+```
+
+## Get lastest go framework for codingame
+Generate the dependency in one file in sources
+
+```PowerShell
+go get github.com/loicpetit/codingame-go@main
+& ($env:USERPROFILE + "/go/bin/bundle") -o main/runner.go -dst ./main -prefix '""' github.com/loicpetit/codingame-go/runner
+```
 
 ## Test
-In project root "go test -v ./main"
+In project root `go test -v ./main`
 
 ## Benchmark
-Debug, execute "go test -v -run nothing -benchtime 1000x -bench Debug ./main"
+Debug, execute `go test -v -run nothing -benchtime 1000x -bench Debug ./main`
 
 ## Generate documention
-In project root "go doc -cmd -u -all main > dist/main.txt"
+In project root `go doc -cmd -u -all main > dist/main.txt`
 
 ## Generate main executbale
-In project root "go build -o ./dist/main.exe ./main"
+In project root `go build -o ./dist/main.exe ./main`
 
 ## Generate match executbale
-In project root "go build -o ./dist/match.exe ./match"
+In project root `go build -o ./dist/match.exe ./match`
 
 ## Run match (from root)
-```Powershell
+```PowerShell
 go build -o ./dist/main.exe ./main
 go build -o ./dist/match.exe ./match
 .\dist\match.exe
@@ -34,7 +44,7 @@ go build -o ./dist/match.exe ./match
 
 ## VS code tasks
 
-```
+```JSON
 {
     "label": "bundle main",
     "type": "shell",

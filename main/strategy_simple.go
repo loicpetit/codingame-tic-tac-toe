@@ -8,7 +8,7 @@ type SimpleStrategy struct {
 	game Game[State, Action]
 }
 
-func (strategy SimpleStrategy) findAction(state *State, player int, maxTime time.Time) *Action {
+func (strategy SimpleStrategy) FindAction(state *State, player int, maxTime time.Time) *Action {
 	if state == nil {
 		panic("State cannot be nil")
 	}

@@ -1,53 +1,30 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"testing"
 )
 
-func TestValidateOutput(t *testing.T) {
-	action := NewAction(1, 1, 1)
-	inputData := &InputData{availableCells: []*Cell{NewCell(2, 2), NewCell(1, 1)}}
-	ValidateOutput(action, inputData)
-}
-
-func TestValidateOutputWithoutAction(t *testing.T) {
+func TestWriter(t *testing.T) {
+	// capture stdout
+	stdout := os.Stdout
+	reader, writer, _ := os.Pipe()
+	os.Stdout = writer
 	defer func() {
-		if recover() == nil {
-			t.Error("Panic is expected")
-		}
+		os.Stdout = stdout
 	}()
-	inputData := &InputData{availableCells: []*Cell{NewCell(2, 2), NewCell(1, 1)}}
-	ValidateOutput(nil, inputData)
-}
-
-func TestValidateOutputWithoutInputData(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic is expected")
-		}
-	}()
-	action := NewAction(1, 1, 1)
-	ValidateOutput(action, nil)
-}
-
-func TestValidateOutputWithoutAvailableActions(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic is expected")
-		}
-	}()
-	action := NewAction(1, 1, 1)
-	inputData := &InputData{}
-	ValidateOutput(action, inputData)
-}
-
-func TestValidateOutputWithoutValidCell(t *testing.T) {
-	defer func() {
-		if recover() == nil {
-			t.Error("Panic is expected")
-		}
-	}()
-	action := NewAction(1, 2, 1)
-	inputData := &InputData{availableCells: []*Cell{NewCell(2, 2), NewCell(1, 1)}}
-	ValidateOutput(action, inputData)
+	defer writer.Close()
+	defer reader.Close()
+	// test writer
+	gameWriter := NewWriter()
+	gameWriter.Write(NewAction(1, 2, 0))
+	var row, column int // x = column, y = row
+	fmt.Fscan(reader, &row, &column)
+	if row != 0 {
+		t.Errorf("Expected row 0 but was %d", row)
+	}
+	if column != 2 {
+		t.Errorf("Expected column 2 but was %d", column)
+	}
 }

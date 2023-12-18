@@ -8,17 +8,17 @@ import (
 
 func TestRunnerNoTurn(t *testing.T) {
 	// prepare
-	game := NewTicTacToeGame()
-	runner := NewTicTacToeRunner(game, NewSimpleStrategy(game))
-	quit := make(chan bool)
 	read, write, _ := os.Pipe()
 	defer read.Close()
 	defer write.Close()
-	var finalState *State
+	game := NewTicTacToeGame()
+	strategy := NewSimpleStrategy(game)
+	runner := NewTicTacToeRunner(read, game, strategy)
+	quit := make(chan bool)
 	go func() {
 		quit <- true
 	}()
-	finalState = runner.runFromInputStream(read, quit)
+	finalState := runner.Run(quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
@@ -63,12 +63,13 @@ func TestRunnerNoTurn(t *testing.T) {
 
 func TestRunner(t *testing.T) {
 	// prepare
-	game := NewTicTacToeGame()
-	runner := NewTicTacToeRunner(game, NewSimpleStrategy(game))
-	quit := make(chan bool)
 	read, write, _ := os.Pipe()
 	defer read.Close()
 	defer write.Close()
+	game := NewTicTacToeGame()
+	strategy := NewSimpleStrategy(game)
+	runner := NewTicTacToeRunner(read, game, strategy)
+	quit := make(chan bool)
 	go func() {
 		// turn 1
 		write.WriteString("-1 -1\n") // opponent move row col (y, x)
@@ -97,7 +98,7 @@ func TestRunner(t *testing.T) {
 		// stop
 		quit <- true
 	}()
-	finalState := runner.runFromInputStream(read, quit)
+	finalState := runner.Run(quit)
 	// assert
 	if finalState == nil {
 		t.Fatal("Final state should not be nil")
