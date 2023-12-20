@@ -32,6 +32,13 @@ func (game TicTacToeGame) GetAvailableActions(state *State, player int) []*Actio
 	return actions
 }
 
+func (game TicTacToeGame) GetLastPlayer(state *State) int {
+	if state == nil {
+		return 0
+	}
+	return state.lastPlayer
+}
+
 func (game TicTacToeGame) GetNextPlayer(state *State) int {
 	if state == nil || state.lastPlayer != 1 {
 		return 1

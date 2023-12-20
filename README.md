@@ -18,6 +18,7 @@ Generate the dependency in one file in sources
 ```PowerShell
 go get github.com/loicpetit/codingame-go@main
 & ($env:USERPROFILE + "/go/bin/bundle") -o main/runner.go -dst ./main -prefix '""' github.com/loicpetit/codingame-go/runner
+& ($env:USERPROFILE + "/go/bin/bundle") -o main/mcts.go -dst ./main -prefix '""' github.com/loicpetit/codingame-go/mcts
 & ($env:USERPROFILE + "/go/bin/bundle") -o main/test_helper.go -dst ./main -prefix '""' github.com/loicpetit/codingame-go/test
 # previous go command update cache and add the mod file but we dont need it
 go mod tidy
